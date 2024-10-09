@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tadingyut Homage</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Spectral:wght@300&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Spectral', serif;
+            background-color: #1b1b2f;
+            color: #f5f5f5;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            font-family: 'Great Vibes', cursive;
+            margin-bottom: 20px;
+            color: #ffd700;
+            transition: transform 1s;
+        }
+
+        p {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            color: #ffe066;
+            transition: opacity 1s;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #ffbe76;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 206, 0, 0.8);
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .lantern {
+            position: absolute;
+            width: 90px; /* Increased size */
+            height: 120px; /* Increased size */
+            background-color: #ffcc00;
+            border-radius: 20px;
+            animation: moveLanterns 10s linear forwards; /* Slowed down */
+            opacity: 0;
+            box-shadow: 0 0 25px rgba(255, 206, 0, 0.8);
+            transition: transform 1s;
+            filter: blur(2px); /* Slight blur for smoothness */
+        }
+
+        .lantern::after {
+            content: '';
+            position: absolute;
+            width: 15px; /* Increased flame size */
+            height: 15px;
+            background-color: #f8c471;
+            border-radius: 50%;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: flicker 1.5s infinite alternate; /* Flicker effect */
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes moveLanterns {
+            0% {
+                transform: translateY(100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh);
+                opacity: 0;
+            }
+        }
+
+        .message {
+            font-size: 2em;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+            margin-top: 50px;
+            opacity: 0;
+            transition: opacity 1s;
+            position: absolute;
+            width: 60%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="welcomeText">I pay homage for teachers of Concept X International School</h1>
+    <p id="introductionText">Hi, my name is Zhorik, and I am from IGCSE section A. I created this lantern effect for Tadingyut.</p>
+    <button id="showLanterns">Click Here</button>
+    
+    <div id="lanternContainer"></div>
+    <div class="message" id="homageText"></div>
+
+    <!-- Add the audio tag here -->
+    <audio id="backgroundMusic" src="bg music.mp3"></audio>
+
+    <script>
+        const button = document.getElementById('showLanterns');
+        const lanternContainer = document.getElementById('lanternContainer');
+        const homageText = document.getElementById('homageText');
+        const welcomeText = document.getElementById('welcomeText');
+        const introductionText = document.getElementById('introductionText');
+        const audio = document.getElementById('backgroundMusic');
+
+        const texts = [
+            "To the teachers who guide us with patience and wisdom.",
+            "Your kindness inspires us to achieve greatness.",
+            "Thank you for lighting our path with knowledge.",
+            "Your dedication makes a lasting impact on our lives.",
+            "You empower us to dream big and reach our goals.",
+            "Your support means the world to us.",
+            "We appreciate your hard work and commitment.",
+            "You are the guiding stars in our journey.",
+            "Your passion for teaching ignites our love for learning.",
+            "Thank you for being our mentors and role models."
+        ];
+
+        let textIndex = 0;
+
+        button.addEventListener('click', () => {
+            // Play audio
+            audio.play();
+
+            // Hide the welcome and introduction text and button
+            welcomeText.style.opacity = 0;
+            introductionText.style.opacity = 0;
+            button.style.display = 'none';
+
+            // Move welcome text to the top
+            welcomeText.style.transform = 'translateY(-150px)';
+            introductionText.style.transform = 'translateY(-150px)';
+            
+            // Start showing homage text
+            homageText.style.opacity = 1;
+            homageText.innerText = texts[textIndex];
+
+            // Update homage text every 5 seconds
+            const homageInterval = setInterval(() => {
+                homageText.style.opacity = 0;
+                setTimeout(() => {
+                    textIndex++;
+                    if (textIndex < texts.length) {
+                        homageText.innerText = texts[textIndex];
+                        homageText.style.opacity = 1;
+                    } else {
+                        clearInterval(homageInterval);
+                        setTimeout(() => {
+                            window.location.href = 'about:blank'; // Redirect to homepage or show thank you message
+                        }, 3000); // Wait for 3 seconds before redirecting
+                    }
+                }, 1000);
+            }, 5000);
+
+            // Create lanterns
+            setInterval(createLantern, 1000); // Loop lantern creation
+        });
+
+        function createLantern() {
+            const lantern = document.createElement('div');
+            lantern.classList.add('lantern');
+            lantern.style.left = `${Math.random() * 100}%`;
+            lantern.style.opacity = 0;
+            lanternContainer.appendChild(lantern);
+
+            // Make lantern appear
+            setTimeout(() => {
+                lantern.style.opacity = 1;
+            }, 100); 
+
+            // Remove lantern after animation ends
+            setTimeout(() => {
+                lantern.remove();
+            }, 10000); // Match the slower speed
+        }
+    </script>
+</body>
+</html>
